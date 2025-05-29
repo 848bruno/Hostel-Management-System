@@ -1,5 +1,8 @@
 import { IsNumber, IsDateString, IsNotEmpty, IsString } from 'class-validator';
 export class CreateAdminDto {
+  @IsNumber()
+  @IsNotEmpty()
+  ASdmin_id: number;
   @IsString()
   @IsNotEmpty()
   username: string;
