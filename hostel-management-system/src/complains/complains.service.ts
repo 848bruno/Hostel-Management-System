@@ -1,86 +1,54 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateComplainDto } from './dto/create-complain.dto';
 import { UpdateComplainDto } from './dto/update-complain.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Complain } from './entities/complain.entity';
 import { Repository } from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
+import{Student} from 'src/student/entities/student.entity';
+
 
 @Injectable()
 export class ComplainsService {
-  constructor(@InjectRepository(Complain) private complainsRepository: Repository<Complain>) {
+  constructor(@InjectRepository(Complain) private  complainRepository: Repository<Complain>,
+   @InjectRepository(Student)
+    private readonly studentRepository: Repository<Student>,
+
+) {
     
   }
-  async create(createComplainDto: CreateComplainDto) {
-    return await this.complainsRepository
-      .save(createComplainDto)
-      .then((complain) => {
-        return complain;
-      })
-      .catch((error) => {
-        throw new Error(`Error creating complain: ${error.message}`);
-      });
-  }
-
-  async findAll(search?: string) {
-  if (search) {
-    return await this.complainsRepository.find(
-      {where: { complain: `%${search}%` } }
-    );
-  }
-    return this.complainsRepository.find({
-      relations:['user'],
+    async create(createComplainDto: CreateComplainDto): Promise<Complain> {
+    const student = await this.studentRepository.findOne({ where: { userid: createComplainDto.userid } });
+    if (!student) {
+      throw new NotFoundException(`Student with ID ${createComplainDto.userid} not found`);
+    }
+    const complaint = this.complainRepository.create({
+      complain: createComplainDto.complain,
+      status: createComplainDto.status,
+      student,
     });
+    return this.complainRepository.save(complaint);
   }
 
-  async findOne(complainid: number) {
-      return this.complainsRepository.findOne({
-        where: { complainid: complainid },
-        relations: ['user'],})
-        .then((complain) => {
-          if (!complain) {
-            return `No complain found with id ${complainid}`;
-          }
-          return complain;
-        }) 
-        .catch((error) => {
-          console.error('Error finding complain:', error);
-          throw new Error(`Failed to find complain with id ${complainid}`);
-        });
-    
-    
+  findAll(): Promise<Complain[]> {
+    return this.complainRepository.find({ relations: ['feedbacks','user'] });
   }
 
-  async update(complainid: number, updateComplainDto: UpdateComplainDto) {
-   const complain = await this.complainsRepository.findOne({ 
-    where:{ complainid},
-    relations:['user'],
-    });
-    if (!complain) {
-      return `No complain found with id ${complainid}`;
+  async findOne(id: number): Promise<Complain> {
+    const complaint = await this.complainRepository.findOne({ where: { complainid: id }, relations: [ 'feedbacks', 'user'] });
+    if (!complaint) {
+      throw new NotFoundException(`Complain with ID ${id} not found`);
     }
-    if (updateComplainDto.user) {
-      const user = await this.complainsRepository.manager.findOne(User, {
-        where: { userid: updateComplainDto.user.userid },
-      });
-      if (!user) {
-        return `User with id ${updateComplainDto.user.userid} not found`;
-      }
-      updateComplainDto.user = user;
-    }
-    if (updateComplainDto.status)  complain.status = updateComplainDto.status;
-    if (updateComplainDto.complain) complain.complain = updateComplainDto.complain;
-     
-    await this.complainsRepository.save(complain);
-    // Update the complain with the new data    
+    return complaint;
   }
 
+  async update(id: number, updateComplainDto: UpdateComplainDto): Promise<Complain> {
+    const complain = await this.findOne(id);
+    Object.assign(complain, updateComplainDto);
+    return this.complainRepository.save(complain);
+  }
 
-  async remove(complainid: number) {
-    const result = await this.complainsRepository.delete(complainid);
-    if (result.affected === 0) {
-      return `No complain found with id ${complainid}`;
-    }
-   
+  async remove(id: number): Promise<void> {
+    await this.complainRepository.delete(id);
   }
 }

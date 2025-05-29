@@ -31,22 +31,21 @@ export class UserService {
         relations: ['complain'],
       });
     } 
-    return `This action returns all user`;
+    return this.userRepository.find({
+      relations: ['complain'],
+    });
   }
 
-  findOne(userid: number) : Promise<User | string> {
-    return this.userRepository.findOne({ where: { userid }, relations: ['complain'] })
-      .then((user) => {
-        if (!user) {
-          return `No user found with id ${userid}`;
-        }
-        return user;
-      })
-      .catch((error) => {
-        console.error('Error finding user:', error);
-        throw new Error(`Failed to find user with id ${userid}`); 
-      });
-    
+  async findOne(userid: number): Promise<User | string> {
+    try {
+      const user = await this.userRepository.findOne({ where: { userid }, relations: ['complain'] });
+      if (!user) {
+        return `No user found with id ${userid}`;
+      }
+      return user;
+    } catch (error) {
+      throw new Error(`Failed to find user with id ${userid}`);
+    }
   }
 
  async  update(userid: number, updateUserDto: UpdateUserDto): Promise<User | string> {

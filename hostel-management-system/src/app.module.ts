@@ -7,6 +7,9 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { LoggerMiddleware } from './logger.middleware';
 import { UserModule } from './user/user.module';
 import { ComplainsModule } from './complains/complains.module';
+import { FeedbackModule } from './feedback/feedback.module';
+import { StudentModule } from './student/student.module';
+import { SeedModule } from './seed/seed.module';
 
 
 @Module({
@@ -15,7 +18,7 @@ import { ComplainsModule } from './complains/complains.module';
       isGlobal: true,
       envFilePath: '.env',
     }),
-    AdminModule, AdminProfileModule, UserModule, ComplainsModule,
+    AdminModule, AdminProfileModule, UserModule, ComplainsModule, FeedbackModule, StudentModule, SeedModule,
   ],
  
   controllers: [AppController],

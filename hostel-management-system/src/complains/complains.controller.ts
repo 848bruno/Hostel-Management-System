@@ -17,18 +17,18 @@ export class ComplainsController {
     return this.complainsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
+  @Get(':complainid')
+  findOne(@Param('complainid') id: string) {
     return this.complainsService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateComplainDto: UpdateComplainDto) {
+  @Patch(':complainid')
+  update(@Param('complainid') id: string, @Body() updateComplainDto: UpdateComplainDto) {
     return this.complainsService.update(+id, updateComplainDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @Delete(':complainid')
+  remove(@Param('complainid') id: string) {
     return this.complainsService.remove(+id);
   }
 }

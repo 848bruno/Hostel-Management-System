@@ -1,5 +1,9 @@
 import { IsString, IsNotEmpty, IsNumber, IsDate } from "class-validator"; 
+import{User} from 'src/user/entities/user.entity';
 export class CreateComplainDto {
+
+    user?: User;
+
     @IsNotEmpty()
     @IsNumber()
     complainid: number;
