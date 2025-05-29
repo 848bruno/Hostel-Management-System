@@ -9,6 +9,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
+        url: process.env.DATABASE_URL,
+  autoLoadEntities: true,
+ // use false in production and manage migrations
+  ssl: {
+    rejectUnauthorized: false,},
         host: configService.getOrThrow<string>('DB_HOST'),
         port: configService.getOrThrow<number>('DB_PORT'),
         username: configService.getOrThrow<string>('DB_USERNAME'),
