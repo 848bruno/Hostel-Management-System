@@ -1,6 +1,10 @@
-import { IsEmail, IsNotEmpty, IsString, Length } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsNumber, IsString, Length } from 'class-validator';
 
 export class CreateAdminProfileDto {
+  @IsNumber()
+  @IsNotEmpty()
+
+  Admin_id: number;
   @IsString()
   @IsNotEmpty()
   first_name: string;

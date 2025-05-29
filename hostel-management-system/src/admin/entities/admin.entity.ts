@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from 'typeorm';
-import { AdminProfile } from 'src\adminProfile\entities\adminProfile.entity.ts';
+import { AdminProfile } from 'src/adminProfile/entities/adminProfile.entity';
+
 @Entity()
 export class Admin {
   @PrimaryGeneratedColumn()
@@ -19,6 +20,6 @@ export class Admin {
     onUpdate: 'CURRENT_TIMESTAMP',
   })
   updatedAt: Date;
-    @OneToOne(() => AdminProfile, profile => AdminProfile.Admin_id, { cascade: true })
+    @OneToOne(() => AdminProfile, profile => profile.admin, { cascade: true })
   profile: AdminProfile;
 }

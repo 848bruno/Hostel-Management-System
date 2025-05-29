@@ -4,7 +4,7 @@ import { Admin } from 'src/admin/entities/admin.entity';
 @Entity()
 export class AdminProfile {
   @PrimaryGeneratedColumn()
-  static Admin_id: number;
+  Admin_id: number;
   @Column()
   first_name: string;
   @Column()
