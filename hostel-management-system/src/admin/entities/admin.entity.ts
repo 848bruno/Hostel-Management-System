@@ -4,7 +4,7 @@ import { AdminProfile } from 'src/adminProfile/entities/adminProfile.entity';
 @Entity()
 export class Admin {
   @PrimaryGeneratedColumn()
-  admin_id: number;
+  Admin_id: number;
 
   @Column()
   username: string;

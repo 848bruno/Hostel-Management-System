@@ -21,16 +21,16 @@ export class AdminService {
       });
   }
 
-  async findAll(admin_id?: number) {
-    if (admin_id) {
-      return await this.adminRepository.find({ where: { admin_id: admin_id } });
+  async findAll(Admin_id?: number) {
+    if (Admin_id) {
+      return await this.adminRepository.find({ where: { Admin_id: Admin_id } });
     }
     return await this.adminRepository.find();
   }
 
   async findOne(Admin_id: number): Promise<Admin | string> {
     return await this.adminRepository
-      .findOneBy({ admin_id: Admin_id })
+      .findOneBy({ Admin_id: Admin_id })
       .then((Admin) => {
         if (!Admin) {
           return `No Admin found with id ${Admin_id}`;
