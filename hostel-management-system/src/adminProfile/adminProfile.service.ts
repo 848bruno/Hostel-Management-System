@@ -25,10 +25,10 @@ export class AdminProfileService {
   findAll(Admin_id?: number) {
     if (Admin_id) {
       return this.adminProfileRepository.find({
-        where: { Admin_id: Admin_id },
+        where: { Admin_id: Admin_id }, relations: ['admin']
       });
     }
-    return this.adminProfileRepository.find();
+    return this.adminProfileRepository.find({ relations: ['admin'] });
   }
 
   async findOne(Admin_id: number): Promise<AdminProfile | string> {

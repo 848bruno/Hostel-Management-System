@@ -5,6 +5,9 @@ import { AdminProfileModule } from './adminProfile/adminProfile.module';
 import { ConfigModule } from '@nestjs/config';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { LoggerMiddleware } from './logger.middleware';
+import { UserModule } from './user/user.module';
+import { ComplainsModule } from './complains/complains.module';
+
 
 @Module({
   imports: [
@@ -12,7 +15,7 @@ import { LoggerMiddleware } from './logger.middleware';
       isGlobal: true,
       envFilePath: '.env',
     }),
-    AdminModule, AdminProfileModule,
+    AdminModule, AdminProfileModule, UserModule, ComplainsModule,
   ],
  
   controllers: [AppController],
