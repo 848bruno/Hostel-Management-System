@@ -36,17 +36,31 @@ export class UserService {
     });
   }
 
+  // async findOne(userid: number): Promise<User | string> {
+  //   try {
+  //     const user = await this.userRepository.findOne({ where: { userid }, relations: ['complain'] });
+  //     if (!user) {
+  //       return `No user found with id ${userid}`;
+  //     }
+  //     return user;
+  //   } catch (error) {
+  //     throw new Error(`Failed to find user with id ${userid}`);
+  //   }
+  // }
   async findOne(userid: number): Promise<User | string> {
-    try {
-      const user = await this.userRepository.findOne({ where: { userid }, relations: ['complain'] });
-      if (!user) {
-        return `No user found with id ${userid}`;
-      }
-      return user;
-    } catch (error) {
-      throw new Error(`Failed to find user with id ${userid}`);
+      return await this.userRepository
+        .findOneBy({ userid: userid })
+        .then((User) => {
+          if (!User) {
+            return `No User found with id ${userid}`;
+          }
+          return User;
+        })
+        .catch((error) => {
+          console.error('Error finding User:', error);
+          throw new Error(`Failed to find User with id ${userid}`);
+        });
     }
-  }
 
  async  update(userid: number, updateUserDto: UpdateUserDto): Promise<User | string> {
     const user = await this.userRepository.findOne({ where: { userid } });
