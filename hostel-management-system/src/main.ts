@@ -1,7 +1,24 @@
+// import { NestFactory } from '@nestjs/core';
+// import { AppModule } from './app.module';
+// import { ValidationPipe } from '@nestjs/common';
+// import { ConfigService } from '@nestjs/config'
+
+// async function bootstrap() {
+//   const app = await NestFactory.create(AppModule);
+//   app.useGlobalPipes(new ValidationPipe());
+
+//   const configService = app.get(ConfigService);
+//   const PORT = configService.getOrThrow<number>('PORT');
+
+//  await app.listen(process.env.PORT || 3000);
+
+// }
+// bootstrap();
+
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config'
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -10,8 +27,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const PORT = configService.getOrThrow<number>('PORT');
 
- await app.listen(process.env.PORT || 3000);
-
+  await app.listen(PORT);
+  console.log(`Server running on port ${PORT}`);
 }
 bootstrap();
-
