@@ -29,6 +29,6 @@ export class AppModule {
     configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(LoggerMiddleware)
-      .forRoutes('admin', 'adminprofile',);
+      .forRoutes('admin', 'adminprofile','complains','student','user','feedback');
   }
 }
