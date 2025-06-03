@@ -10,6 +10,7 @@ import { ComplainsModule } from './complains/complains.module';
 import { FeedbackModule } from './feedback/feedback.module';
 import { StudentModule } from './student/student.module';
 import { SeedModule } from './seed/seed.module';
+import { CacheModule } from './cache/cache.module';
 
 
 @Module({
@@ -19,7 +20,7 @@ import { SeedModule } from './seed/seed.module';
       isGlobal: true,
       envFilePath: '.env',
     }),
-    AdminModule, AdminProfileModule, UserModule, ComplainsModule, FeedbackModule, StudentModule, SeedModule,
+    AdminModule, AdminProfileModule, UserModule, ComplainsModule, FeedbackModule, StudentModule, SeedModule, CacheModule,
   ],
  
   controllers: [AppController],
