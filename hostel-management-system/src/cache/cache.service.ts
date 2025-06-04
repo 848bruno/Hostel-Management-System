@@ -1,26 +1,83 @@
-import { Injectable } from '@nestjs/common';
-import { CreateCacheDto } from './dto/create-cache.dto';
-import { UpdateCacheDto } from './dto/update-cache.dto';
+import { Inject, Injectable } from '@nestjs/common';
+import { CreateCacheDto } from 'src/cache/dto/create-cache.dto';
+
+import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
 
 @Injectable()
 export class CacheService {
-  create(createCacheDto: CreateCacheDto) {
-    return 'This action adds a new cache';
+  constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
+
+  async create(createCacheDto: CreateCacheDto) {
+    const { key, value, ttl } = createCacheDto;
+
+    try {
+      // Set the value in cache with optional TTL
+      if (ttl) {
+        await this.cacheManager.set(key, value, ttl * 1000); // Convert seconds to milliseconds
+      }
+      await this.cacheManager.set(key, value); // Convert seconds to milliseconds
+
+      return {
+        success: true,
+        message: `Cache entry created successfully`,
+        data: {
+          key,
+          value,
+        },
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: `Failed to create cache entry: ${JSON.stringify(error)}`,
+        data: null,
+      };
+    }
   }
 
-  findAll() {
-    return `This action returns all cache`;
+  async get(key: string) {
+    try {
+      const value = await this.cacheManager.get(key);
+
+      if (value === undefined || value === null) {
+        return {
+          success: false,
+          message: `Cache entry with key '${key}' not found`,
+          data: null,
+        };
+      }
+
+      return {
+        success: true,
+        message: `Cache entry retrieved successfully`,
+        data: {
+          key,
+          value,
+        },
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: `Failed to retrieve cache entry: ${JSON.stringify(error)}`,
+        data: null,
+      };
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} cache`;
-  }
+  async remove(key: string) {
+    try {
+      await this.cacheManager.del(key);
 
-  update(id: number, updateCacheDto: UpdateCacheDto) {
-    return `This action updates a #${id} cache`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} cache`;
+      return {
+        success: true,
+        message: `Cache entry with key '${key}' removed successfully`,
+        data: { key },
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: `Failed to remove cache entry: ${JSON.stringify(error)}`,
+        data: null,
+      };
+    }
   }
 }
