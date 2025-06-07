@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn ,OneToOne,JoinColumn} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm';
 import { Admin } from 'src/admin/entities/admin.entity';
 
 @Entity()
@@ -13,6 +13,14 @@ export class AdminProfile {
   phone_number: string;
   @Column()
   address: string;
+  @Column({ type: 'text', nullable: true, default: null })
+  hashedRefreshToken: string | null;
+  @Column({ default: 'admin@example.com' })
+  email: string;
+
+  @Column({ nullable: true })
+  password: string;
+
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
   @OneToOne(() => Admin, admin => admin.profile)

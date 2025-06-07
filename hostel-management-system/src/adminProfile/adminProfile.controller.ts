@@ -13,7 +13,7 @@ import { UpdateAdminProfileDto } from './dto/update-admin-profile.dto';
 
 @Controller('admin-profile')
 export class AdminProfileController {
-  constructor(private readonly adminProfileService: AdminProfileService) {}
+  constructor(private readonly adminProfileService: AdminProfileService) { }
 
   @Post()
   create(@Body() createAdminProfileDto: CreateAdminProfileDto) {

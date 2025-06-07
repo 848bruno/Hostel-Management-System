@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import type { Cache } from 'cache-manager'; // Use `cache-manager` typing directly
 import { CreateCacheDto } from 'src/cache/dto/create-cache.dto';
+
+import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
 
 @Injectable()
 export class CacheService {
@@ -11,16 +11,19 @@ export class CacheService {
     const { key, value, ttl } = createCacheDto;
 
     try {
+      // Set the value in cache with optional TTL
       if (ttl) {
-        await this.cacheManager.set(key, value, ttl);
-      } else {
-        await this.cacheManager.set(key, value);
+        await this.cacheManager.set(key, value, ttl * 1000); // Convert seconds to milliseconds
       }
+      await this.cacheManager.set(key, value); // Convert seconds to milliseconds
 
       return {
         success: true,
         message: `Cache entry created successfully`,
-        data: { key, value },
+        data: {
+          key,
+          value,
+        },
       };
     } catch (error) {
       return {
@@ -35,13 +38,13 @@ export class CacheService {
     try {
       const value = await this.cacheManager.get(key);
 
-      // if (value === undefined || value === null) {
-      //   return {
-      //     success: false,
-      //     message: `Cache entry with key '${key}' not found`,
-      //     data: null,
-      //   };
-      // }
+      if (value === undefined || value === null) {
+        return {
+          success: false,
+          message: `Cache entry with key '${key}' not found`,
+          data: null,
+        };
+      }
 
       return {
         success: true,

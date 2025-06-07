@@ -56,6 +56,9 @@ export class SeedService {
       profile.last_name = faker.person.lastName();
       profile.phone_number = faker.phone.number();
       profile.address = faker.location.streetAddress();
+        profile.email = faker.internet.email();
+      profile.password = faker.internet.password({ length: 10 });
+       profile.hashedRefreshToken = null
       admin.profile = profile;
 
       admins.push(await this.adminRepository.save(admin));
