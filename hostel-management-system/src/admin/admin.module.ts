@@ -4,11 +4,11 @@ import { Admin } from './entities/admin.entity';
 import { DatabaseModule } from 'src/database/database.module';
 import { AdminService } from './admin.service';
 import { AdminController } from './admin.controller';
-import { AdminProfile } from 'src/adminProfile/entities/adminProfile.entity';
+import { Profile } from 'src/profile/entities/profile.entity';
 
 @Module({
-  imports: [DatabaseModule, TypeOrmModule.forFeature([Admin, AdminProfile])],
+  imports: [DatabaseModule, TypeOrmModule.forFeature([Admin, Profile])],
   controllers: [AdminController],
   providers: [AdminService],
 })
-export class AdminModule {}
+export class AdminModule { }

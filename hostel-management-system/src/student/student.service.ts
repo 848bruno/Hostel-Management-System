@@ -10,19 +10,19 @@ export class StudentsService {
   constructor(
     @InjectRepository(Student)
     private readonly studentRepository: Repository<Student>,
-  ) {}
+  ) { }
 
   create(createStudentDto: CreateStudentDto): Promise<Student> {
     const student = this.studentRepository.create(createStudentDto);
     return this.studentRepository.save(student);
-  }
+  }s
 
   findAll(): Promise<Student[]> {
     return this.studentRepository.find({ relations: ['complain', 'feedbacks'] });
   }
 
   async findOne(id: number): Promise<Student> {
-    const student = await this.studentRepository.findOne({ where: { userid: id }, relations: ['complain', 'feedbacks'] });
+    const student = await this.studentRepository.findOne({ where: {id: id }, relations: ['complain', 'feedbacks'] });
     if (!student) {
       throw new NotFoundException(`Student with ID ${id} not found`);
     }

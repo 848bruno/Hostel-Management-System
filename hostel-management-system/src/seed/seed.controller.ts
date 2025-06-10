@@ -5,13 +5,13 @@ import { SeedService } from './seed.service';
 export class SeedController {
   private readonly logger = new Logger(SeedController.name);
 
-  constructor(private readonly seedService: SeedService) {}
+  constructor(private readonly seedService: SeedService) { }
 
   @Post()
   @HttpCode(HttpStatus.OK)
-  async runSeed() {
+  async seed() {
     this.logger.log('Seed endpoint called');
-    await this.seedService.run();
+    await this.seedService.seed();
     return { message: 'Database seeded successfully' };
   }
 }

@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAuthDto } from './dto/login.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AdminProfile } from 'src/adminProfile/entities/adminProfile.entity';
+import { Profile } from 'src/profile/entities/profile.entity';
 import { Repository } from 'typeorm';
 import * as Bycrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
@@ -10,17 +10,17 @@ import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(AdminProfile) private profileRepository: Repository<AdminProfile>,
+    @InjectRepository(Profile) private profileRepository: Repository<Profile>,
     private jwtService: JwtService,
     private configService: ConfigService,
   ) { }
 
   // Helper method to generates access and refresh tokens for the user
-  private async getTokens(userId: number, email: string) {
+  private async getTokens(id: number, email: string) {
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(
         {
-          sub: userId,
+          sub: id,
           email: email,
         },
         {
@@ -34,7 +34,7 @@ export class AuthService {
       ),
       this.jwtService.signAsync(
         {
-          sub: userId,
+          sub: id,
           email: email,
         },
         {
@@ -57,21 +57,40 @@ export class AuthService {
   }
 
   // Helper method to remove password from profile
-  private async saveRefreshToken(userId: number, refreshToken: string) {
+  private async saveRefreshToken(id: number, refreshToken: string) {
     // hash refresh token
     const hashedRefreshToken = await this.hashData(refreshToken);
     // save hashed refresh token in the database
-    await this.profileRepository.update(userId, {
+    await this.profileRepository.update(id, {
       hashedRefreshToken: hashedRefreshToken,
     });
   }
+
+  // Method to sign up a new user
+async signUp(dto: CreateAuthDto) {
+  const existing = await this.profileRepository.findOne({
+    where: { email: dto.email },
+  });
+  if (existing) {
+    throw new Error('User already exists');
+  }
+
+  const hashedPassword = await this.hashData(dto.password);
+  const newUser = this.profileRepository.create({
+    email: dto.email,
+    password: hashedPassword,
+  });
+  await this.profileRepository.save(newUser);
+
+  return { message: 'User created successfully' };
+}
 
   // Method to sign in the user
   async signIn(createAuthDto: CreateAuthDto) {
     // check if the user exists in the database
     const foundUser = await this.profileRepository.findOne({
       where: { email: createAuthDto.email },
-      select: ['Admin_id', 'email', 'password'], // Only select necessary fields
+      select: ['id', 'email', 'password'], // Only select necessary fields
     });
     if (!foundUser) {
       throw new NotFoundException(
@@ -88,34 +107,34 @@ export class AuthService {
     }
     // if correct generate tokens
     const { accessToken, refreshToken } = await this.getTokens(
-      foundUser.Admin_id,
+      foundUser.id,
       foundUser.email,
     );
 
     // save refresh token in the database
-    await this.saveRefreshToken(foundUser.Admin_id, refreshToken);
+    await this.saveRefreshToken(foundUser.id, refreshToken);
     // return the tokens
     return { accessToken, refreshToken };
   }
 
   // Method to sign out the user
-  async signOut(userId: string) {
+  async signOut(id: number) {
     // set user refresh token to null
-    const res = await this.profileRepository.update(userId, {
+    const res = await this.profileRepository.update(id, {
       hashedRefreshToken: null,
     });
 
     if (res.affected === 0) {
-      throw new NotFoundException(`User with ID ${userId} not found`);
+      throw new NotFoundException(`User with ID ${id} not found`);
     }
-    return { message: `User with id : ${userId} signed out successfully` };
+    return { message: `User with id : ${id} signed out successfully` };
   }
 
   // Method to refresh tokens
   async refreshTokens(id: number, refreshToken: string) {
     // get user
     const foundUser = await this.profileRepository.findOne({
-      where: {  Admin_id: id },
+      where: { id: id },
     });
 
     if (!foundUser) {
@@ -137,11 +156,11 @@ export class AuthService {
     }
     // generate new tokens
     const { accessToken, refreshToken: newRefreshToken } = await this.getTokens(
-      foundUser. Admin_id,
+      foundUser.id,
       foundUser.email,
     );
     // save new refresh token in the database
-    await this.saveRefreshToken(foundUser. Admin_id, newRefreshToken);
+    await this.saveRefreshToken(foundUser.id, newRefreshToken);
     // return the new tokens
     return { accessToken, refreshToken: newRefreshToken };
   }

@@ -7,12 +7,12 @@ import { DatabaseModule } from 'src/database/database.module';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { AtStrategy, RfStrategy } from './strategies';
-import { AdminProfile } from 'src/adminProfile/entities/adminProfile.entity';
+import { Profile } from 'src/profile/entities/profile.entity';
 
 @Module({
   imports: [
     DatabaseModule,
-    TypeOrmModule.forFeature([AdminProfile]),
+    TypeOrmModule.forFeature([Profile]),
     JwtModule.register({
       global: true,
     }), //  JwtModule with global configuration

@@ -7,7 +7,7 @@ import { AppService } from './app.service';
 import { LoggerMiddleware } from './logger.middleware';
 
 import { AdminModule } from './admin/admin.module';
-import { AdminProfileModule } from './adminProfile/adminProfile.module';
+import { ProfileModule } from './profile/profile.module';
 import { UserModule } from './user/user.module';
 import { ComplainsModule } from './complains/complains.module';
 import { FeedbackModule } from './feedback/feedback.module';
@@ -27,7 +27,7 @@ import { AuthModule } from './auth/auth.module';
 
     }),
     AdminModule,
-    AdminProfileModule,
+    ProfileModule,
     UserModule,
     ComplainsModule,
     FeedbackModule,
@@ -42,6 +42,6 @@ export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(LoggerMiddleware)
-      .forRoutes('admin', 'adminprofile', 'complains', 'student', 'user', 'feedback');
+      .forRoutes('admin', 'profile', 'complains', 'student', 'user', 'feedback');
   }
 }

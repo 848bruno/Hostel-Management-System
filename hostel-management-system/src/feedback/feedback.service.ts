@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { Feedback } from './entities/feedback.entity';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
 import { UpdateFeedbackDto } from './dto/update-feedback.dto';
-import{Student} from 'src/student/entities/student.entity';
+import { Student } from 'src/student/entities/student.entity';
 
 @Injectable()
 export class FeedbackService {
@@ -14,10 +14,10 @@ export class FeedbackService {
     private readonly feedbackRepository: Repository<Feedback>,
     @InjectRepository(Student)
     private readonly studentRepository: Repository<Student>,
-  ) {}
+  ) { }
 
   async create(createFeedbackDto: CreateFeedbackDto): Promise<Feedback> {
-    const student = await this.studentRepository.findOne({ where: { userid: createFeedbackDto.userid } });
+    const student = await this.studentRepository.findOne({ where: { id: createFeedbackDto.userid } });
     if (!student) {
       throw new NotFoundException(`user with ID ${createFeedbackDto.userid} not found`);
     }

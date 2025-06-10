@@ -28,6 +28,15 @@ export interface RequestWithUser extends Request {
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
+
+  // auth/signup
+  @Public()
+  @Post('signup')
+  async signUp(@Body() dto: CreateAuthDto) {
+    return this.authService.signUp(dto);
+  }
+
+
   // /auth/signin
   @Public()
   @Post('signin')
@@ -38,7 +47,7 @@ export class AuthController {
   // /auth/signout/:id
   @UseGuards(AtGuard)
   @Get('signout/:id')
-  signOut(@Param('id') id: string) {
+  signOut(@Param('id') id: number) {
     return this.authService.signOut(id);
   }
 

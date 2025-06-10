@@ -1,12 +1,16 @@
 import { IsInt, IsDate } from 'class-validator';
 
 export class CreateStudentDto {
+
+  @IsInt()
+  id: number;
+
   @IsInt()
   room_id: number;
 
   @IsInt()
   course_id: number;
 
-  @IsDate()
-  registration_date: Date;
+  @IsInt()
+  registration_date: number;
 }

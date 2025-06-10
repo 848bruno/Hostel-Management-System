@@ -9,7 +9,7 @@ import { Repository } from 'typeorm';
 export class AdminService {
   constructor(
     @InjectRepository(Admin) private adminRepository: Repository<Admin>,
-  ) {}
+  ) { }
   async create(createAdminDto: CreateAdminDto): Promise<Admin> {
     return await this.adminRepository
       .save(createAdminDto)
@@ -21,33 +21,33 @@ export class AdminService {
       });
   }
 
-  async findAll(Admin_id?: number) {
-    if (Admin_id) {
-      return await this.adminRepository.find({ where: { Admin_id: Admin_id } });
+  async findAll(id?: number) {
+    if (id) {
+      return await this.adminRepository.find({ where: { id: id } });
     }
     return await this.adminRepository.find();
   }
 
-  async findOne(Admin_id: number): Promise<Admin | string> {
+  async findOne(id: number): Promise<Admin | string> {
     return await this.adminRepository
-      .findOneBy({ Admin_id: Admin_id })
+      .findOneBy({ id: id })
       .then((Admin) => {
         if (!Admin) {
-          return `No Admin found with id ${Admin_id}`;
+          return `No Admin found with id ${id}`;
         }
         return Admin;
       })
       .catch((error) => {
         console.error('Error finding Admin:', error);
-        throw new Error(`Failed to find Admin with id ${Admin_id}`);
+        throw new Error(`Failed to find Admin with id ${id}`);
       });
   }
   async update(
-    Admin_id: number,
+    id: number,
     updateAdminDto: UpdateAdminDto,
   ): Promise<Admin | string> {
-    await this.adminRepository.update(Admin_id, updateAdminDto);
-    return this.findOne(Admin_id);
+    await this.adminRepository.update(id, updateAdminDto);
+    return this.findOne(id);
   }
 
   async remove(id: number): Promise<string> {
