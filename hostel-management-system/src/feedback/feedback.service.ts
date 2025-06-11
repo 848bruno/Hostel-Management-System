@@ -13,15 +13,15 @@ export class FeedbackService {
     private readonly feedbackRepository: Repository<Feedback>,
     @InjectRepository(Student)
     private readonly studentRepository: Repository<Student>,
-  ) {}
+  ) { }
 
   async create(createFeedbackDto: CreateFeedbackDto): Promise<Feedback> {
     const student = await this.studentRepository.findOne({
-      where: { id: createFeedbackDto.userid },
+      where: { id: createFeedbackDto.id },
     });
     if (!student) {
       throw new NotFoundException(
-        `user with ID ${createFeedbackDto.userid} not found`,
+        `student with ID ${createFeedbackDto.id} not found`,
       );
     }
     const feedback = this.feedbackRepository.create({
@@ -33,13 +33,13 @@ export class FeedbackService {
   }
 
   findAll(): Promise<Feedback[]> {
-    return this.feedbackRepository.find({ relations: ['user', 'complain'] });
+    return this.feedbackRepository.find({ relations: ['student', 'complain'] });
   }
 
   async findOne(id: number): Promise<Feedback> {
     const feedback = await this.feedbackRepository.findOne({
       where: { feedback_id: id },
-      relations: ['user', 'complain'],
+      relations: ['student', 'complain'],
     });
     if (!feedback) {
       throw new NotFoundException(`Feedback with ID ${id} not found`);

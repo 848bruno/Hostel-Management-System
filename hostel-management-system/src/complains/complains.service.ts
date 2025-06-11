@@ -13,14 +13,14 @@ export class ComplainsService {
     private complainRepository: Repository<Complain>,
     @InjectRepository(Student)
     private readonly studentRepository: Repository<Student>,
-  ) {}
+  ) { }
   async create(createComplainDto: CreateComplainDto): Promise<Complain> {
     const student = await this.studentRepository.findOne({
-      where: { id: createComplainDto.userid },
+      where: { id: createComplainDto.id },
     });
     if (!student) {
       throw new NotFoundException(
-        `Student with ID ${createComplainDto.userid} not found`,
+        `Student with ID ${createComplainDto.id} not found`,
       );
     }
     const complaint = this.complainRepository.create({
@@ -38,7 +38,7 @@ export class ComplainsService {
   async findOne(id: number): Promise<Complain> {
     const complaint = await this.complainRepository.findOne({
       where: { complainid: id },
-      relations: ['feedbacks', 'user'],
+      relations: ['feedbacks', 'student'],
     });
     if (!complaint) {
       throw new NotFoundException(`Complain with ID ${id} not found`);

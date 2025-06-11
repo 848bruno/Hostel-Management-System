@@ -14,7 +14,7 @@ import { UpdateStudentDto } from './dto/update-student.dto';
 import { Role } from 'src/profile/entities/profile.entity';
 import { UseGuards } from '@nestjs/common';
 import { Public } from 'src/auth/decorators';
-import { RtGuard } from 'src/auth/guards';
+import { AtGuard } from 'src/auth/guards';
 import { Roles } from 'src/auth/decorators/roles.decoretor';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -22,10 +22,12 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 @ApiTags('Student')
 @ApiBearerAuth()
 @Controller('students')
-@UseGuards(RtGuard, RolesGuard)
+@UseGuards(AtGuard, RolesGuard)
 export class StudentsController {
   constructor(private readonly studentsService: StudentsService) { }
+
   @Public()
+
   @Post()
   create(@Body() createStudentDto: CreateStudentDto) {
     return this.studentsService.create(createStudentDto);

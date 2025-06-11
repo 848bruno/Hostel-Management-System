@@ -13,7 +13,7 @@ export class CreateComplainDto {
 
   @IsNotEmpty()
   @IsNumber()
-  userid: number;
+  id: number;
 
   @IsNotEmpty()
   @IsDate()

@@ -37,16 +37,19 @@ export class AdminController {
     return this.adminService.findAll();
   }
 
+  @Roles(Role.ADMIN)
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.adminService.findOne(id);
   }
 
+  @Roles(Role.ADMIN)
   @Patch(':id')
   update(@Param('id') id: number, @Body() updateAdminDto: UpdateAdminDto) {
     return this.adminService.update(id, updateAdminDto);
   }
 
+  @Roles(Role.ADMIN)
   @Delete(':id')
   remove(@Param('id') id: number) {
     return this.adminService.remove(id);
