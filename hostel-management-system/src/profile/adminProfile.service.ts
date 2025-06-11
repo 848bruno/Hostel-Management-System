@@ -4,65 +4,81 @@ import { UpdateProfileDto } from './dto/update-profile.dto';
 import { Profile } from './entities/profile.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class ProfileService {
   constructor(
     @InjectRepository(Profile)
-    private ProfileRepository: Repository<Profile>,
-  ) { }
+    private profileRepository: Repository<Profile>,
+  ) {}
+
   async create(createProfileDto: CreateProfileDto) {
-    return await this.ProfileRepository
-      .save(createProfileDto)
-      .then((Profile) => {
-        return Profile;
-      })
-      .catch((error) => {
-        throw new Error(`Error creating Profile: ${error.message}`);
+    try {
+      // Normalize email and hash password
+      const normalizedEmail = createProfileDto.email.toLowerCase();
+      const hashedPassword = await bcrypt.hash(createProfileDto.password, 10);
+
+      const profile = this.profileRepository.create({
+        ...createProfileDto,
+        email: normalizedEmail,
+        password: hashedPassword,
       });
+
+      return await this.profileRepository.save(profile);
+    } catch (error) {
+      throw new Error(`Error creating profile: ${error.message}`);
+    }
   }
 
   findAll(id?: number) {
     if (id) {
-      return this.ProfileRepository.find({
-        where: { id: id }, relations: ['admin']
+      return this.profileRepository.find({
+        where: { id },
+        relations: ['admin', 'student'],
       });
     }
-    return this.ProfileRepository.find({ relations: ['admin'] });
+    return this.profileRepository.find({ relations: ['admin', 'student'] });
   }
 
   async findOne(id: number): Promise<Profile | string> {
-    return await this.ProfileRepository
-      .findOneBy({ id: id })
-      .then((Profile) => {
-        if (!Profile) {
-          return `No Profile found with id ${id}`;
-        }
-        return Profile;
-      })
-      .catch((error) => {
-        console.error('Error finding Profile:', error);
-        throw new Error(`Failed to find Profile with id ${id}`);
+    try {
+      const profile = await this.profileRepository.findOne({
+        where: { id },
+        relations: ['admin', 'student'],
       });
+
+      if (!profile) {
+        return `No profile found with id ${id}`;
+      }
+
+      return profile;
+    } catch (error) {
+      throw new Error(`Failed to find profile with id ${id}`);
+    }
   }
 
   async update(id: number, updateProfileDto: UpdateProfileDto) {
-    await this.ProfileRepository.update(id, updateProfileDto);
+    if (updateProfileDto.password) {
+      updateProfileDto.password = await bcrypt.hash(
+        updateProfileDto.password,
+        10,
+      );
+    }
+
+    await this.profileRepository.update(id, updateProfileDto);
     return this.findOne(id);
   }
 
   async remove(id: number): Promise<string> {
-    return await this.ProfileRepository
-      .delete(id)
-      .then((result) => {
-        if (result.affected === 0) {
-          return `No Profile found with id ${id}`;
-        }
-        return `Profile with id ${id} has been removed`;
-      })
-      .catch((error) => {
-        console.error('Error removing Profile:', error);
-        throw new Error(`Failed to remove Profile with id ${id}`);
-      });
+    try {
+      const result = await this.profileRepository.delete(id);
+      if (result.affected === 0) {
+        return `No profile found with id ${id}`;
+      }
+      return `Profile with id ${id} has been removed`;
+    } catch (error) {
+      throw new Error(`Failed to remove profile with id ${id}`);
+    }
   }
 }

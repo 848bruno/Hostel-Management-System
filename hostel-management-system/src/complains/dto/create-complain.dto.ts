@@ -1,25 +1,21 @@
-import { IsString, IsNotEmpty, IsNumber, IsDate } from "class-validator";
-import { User } from 'src/user/entities/user.entity';
+import { IsString, IsNotEmpty, IsNumber, IsDate } from 'class-validator';
 export class CreateComplainDto {
+  @IsNotEmpty()
+  @IsNumber()
+  complainid: number;
+  @IsNotEmpty()
+  @IsString()
+  complain: string;
 
-    user?: User;
+  @IsNotEmpty()
+  @IsString()
+  status: string;
 
-    @IsNotEmpty()
-    @IsNumber()
-    complainid: number;
-    @IsNotEmpty()
-    @IsString()
-    complain: string;
+  @IsNotEmpty()
+  @IsNumber()
+  userid: number;
 
-    @IsNotEmpty()
-    @IsString()
-    status: string;
-
-    @IsNotEmpty()
-    @IsNumber()
-    userid: number;
-
-    @IsNotEmpty()
-    @IsDate()
-    createdAt: Date;
+  @IsNotEmpty()
+  @IsDate()
+  createdAt: Date;
 }

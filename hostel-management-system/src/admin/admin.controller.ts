@@ -11,15 +11,27 @@ import { AdminService } from './admin.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 
+import { Role } from 'src/profile/entities/profile.entity';
+import { UseGuards } from '@nestjs/common';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+
+import { Roles } from 'src/auth/decorators/roles.decoretor';
+import { Public } from 'src/auth/decorators';
+import { AtGuard } from 'src/auth/guards';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+
+@ApiTags('Admin')
+@ApiBearerAuth()
 @Controller('admin')
+@UseGuards(AtGuard, RolesGuard)
 export class AdminController {
   constructor(private readonly adminService: AdminService) { }
-
+  @Public()
   @Post()
   create(@Body() createAdminDto: CreateAdminDto) {
     return this.adminService.create(createAdminDto);
   }
-
+  @Roles(Role.ADMIN)
   @Get()
   findAll() {
     return this.adminService.findAll();

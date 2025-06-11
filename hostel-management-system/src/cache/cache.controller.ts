@@ -2,7 +2,6 @@ import { Controller, Get, Post, Body, Delete, Param } from '@nestjs/common';
 import { CacheService } from './cache.service';
 import { CreateCacheDto } from './dto/create-cache.dto';
 
-
 @Controller('cache')
 export class CacheController {
   constructor(private readonly cacheService: CacheService) {}

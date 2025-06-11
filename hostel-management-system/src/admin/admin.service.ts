@@ -9,7 +9,7 @@ import { Repository } from 'typeorm';
 export class AdminService {
   constructor(
     @InjectRepository(Admin) private adminRepository: Repository<Admin>,
-  ) { }
+  ) {}
   async create(createAdminDto: CreateAdminDto): Promise<Admin> {
     return await this.adminRepository
       .save(createAdminDto)

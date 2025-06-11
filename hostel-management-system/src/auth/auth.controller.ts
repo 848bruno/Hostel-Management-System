@@ -15,6 +15,7 @@ import { Request } from 'express';
 import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';
 import { AtGuard, RtGuard } from './guards';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 export interface RequestWithUser extends Request {
   user: {
@@ -23,19 +24,11 @@ export interface RequestWithUser extends Request {
     refreshToken: string;
   };
 }
-
+@ApiBearerAuth()
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
-
-
-  // auth/signup
-  @Public()
-  @Post('signup')
-  async signUp(@Body() dto: CreateAuthDto) {
-    return this.authService.signUp(dto);
-  }
-
 
   // /auth/signin
   @Public()

@@ -1,13 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from 'typeorm';
 import { Profile } from 'src/profile/entities/profile.entity';
 
 @Entity()
 export class Admin {
+
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  username: string;
   @Column('date')
   last_login: Date;
 
@@ -20,6 +19,7 @@ export class Admin {
     onUpdate: 'CURRENT_TIMESTAMP',
   })
   updatedAt: Date;
-  @OneToOne(() => Profile, profile => profile.admin, { cascade: true })
+  @JoinColumn()
+  @OneToOne(() => Profile, (profile) => profile.admin, { cascade: true })
   profile: Profile;
 }

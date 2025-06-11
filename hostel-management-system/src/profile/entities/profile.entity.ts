@@ -1,4 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne, Relation } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToOne,
+  Relation,
+} from 'typeorm';
 import { Student } from 'src/student/entities/student.entity';
 import { Admin } from 'src/admin/entities/admin.entity';
 
@@ -28,7 +34,7 @@ export class Profile {
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
-  @OneToOne(() => Admin, admin => admin.profile)
+  @OneToOne(() => Admin, (admin) => admin.profile)
   admin: Admin;
   @Column({ type: 'text', nullable: true, default: null })
   hashedRefreshToken: string | null;

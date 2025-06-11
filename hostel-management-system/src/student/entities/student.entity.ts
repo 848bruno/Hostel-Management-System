@@ -1,4 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, OneToOne, JoinColumn, Relation } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  OneToOne,
+  JoinColumn,
+  Relation,
+} from 'typeorm';
 import { Complain } from 'src/complains/entities/complain.entity';
 
 import { Feedback } from 'src/feedback/entities/feedback.entity';
@@ -14,7 +22,6 @@ export class Student {
   @Column()
   course_id: number;
 
-
   @Column({ type: 'timestamp' })
   registration_date: Date;
 
@@ -25,10 +32,9 @@ export class Student {
   @JoinColumn()
   profile: Relation<Profile>;
 
-
-  @OneToMany(() => Complain, complain => complain.student)
+  @OneToMany(() => Complain, (complain) => complain.student)
   complain: Complain[];
 
-  @OneToMany(() => Feedback, feedback => feedback.student)
+  @OneToMany(() => Feedback, (feedback) => feedback.student)
   feedbacks: Feedback[];
 }

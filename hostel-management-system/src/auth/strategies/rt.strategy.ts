@@ -25,7 +25,7 @@ export class RfStrategy extends PassportStrategy(Strategy, 'jwt-rt') {
   constructor(private readonly configService: ConfigService) {
     const options: StrategyOptionsWithRequest = {
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: configService.getOrThrow('JWT_REFRESH_TOKEN_SECRET'), 
+      secretOrKey: configService.getOrThrow('JWT_REFRESH_TOKEN_SECRET'),
       passReqToCallback: true, // what allows us to access the request object in the validate method
     };
     super(options);

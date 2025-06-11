@@ -21,4 +21,4 @@ import { Profile } from 'src/profile/entities/profile.entity';
   providers: [AuthService, AtStrategy, RfStrategy],
   controllers: [AuthController],
 })
-export class AuthModule { }
+export class AuthModule {}

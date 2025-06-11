@@ -1,7 +1,6 @@
 import { IsInt, IsDate } from 'class-validator';
 
 export class CreateStudentDto {
-
   @IsInt()
   id: number;
 

@@ -26,7 +26,7 @@ import { CacheController } from './cache.controller';
       inject: [ConfigService],
     }),
   ],
-   controllers: [CacheController],
+  controllers: [CacheController],
   providers: [CacheService],
   exports: [CacheService],
 })

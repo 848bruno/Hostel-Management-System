@@ -1,7 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, ManyToMany } from 'typeorm';
-import{Student} from 'src/student/entities/student.entity'
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  CreateDateColumn,
+  ManyToMany,
+} from 'typeorm';
+import { Student } from 'src/student/entities/student.entity';
 import { Complain } from 'src/complains/entities/complain.entity';
-
 
 @Entity('feedbacks')
 export class Feedback {
@@ -17,9 +23,9 @@ export class Feedback {
   @CreateDateColumn()
   created_at: Date;
 
-  @ManyToOne(() => Student, student => student.feedbacks)
+  @ManyToOne(() => Student, (student) => student.feedbacks)
   student: Student;
 
-  @ManyToMany(() => Complain, complain => complain.feedbacks)
-  complain: Complain[];
+  @ManyToMany(() => Complain, (complain) => complain.feedbacks)
+  complain: Complain;
 }

@@ -11,4 +11,4 @@ import { Profile } from 'src/profile/entities/profile.entity';
   controllers: [AdminController],
   providers: [AdminService],
 })
-export class AdminModule { }
+export class AdminModule {}
