@@ -17,7 +17,7 @@ import { SeedModule } from './seed/seed.module';
 import { AuthModule } from './auth/auth.module';
 import { AtGuard } from './auth/guards';
 import { CacheableMemory } from 'cacheable';
-import { createKeyv,Keyv } from '@keyv/redis';
+import { createKeyv, Keyv } from '@keyv/redis';
 
 @Module({
   imports: [
@@ -33,16 +33,14 @@ import { createKeyv,Keyv } from '@keyv/redis';
       useFactory: (config: ConfigService) => {
         return {
           ttl: 60000,
-          stores:[
+          stores: [
             new Keyv({
-              store:new CacheableMemory({ttl:60000,lruSize:5000}),
+              store: new CacheableMemory({ ttl: 60000, lruSize: 5000 }),
             }),
-             createKeyv(
-            config.getOrThrow('REDIS_URL'),
-             )
+            createKeyv(config.getOrThrow('REDIS_URL')),
           ],
-                }
-      }
+        };
+      },
     }),
     ThrottlerModule.forRootAsync({
       imports: [ConfigModule],
@@ -50,8 +48,8 @@ import { createKeyv,Keyv } from '@keyv/redis';
       useFactory: (config: ConfigService) => ({
         throttlers: [
           {
-            ttl: Number(config.getOrThrow('THROTTLE_TTL')),
-            limit: Number(config.getOrThrow('THROTTLE_LIMIT')),
+            ttl: Number(config.getOrThrow('THROTTLE_TTL', 60)),
+            limit: Number(config.getOrThrow('THROTTLE_LIMIT', 10)),
             ignoreUserAgents: [/^curl\//, /^PostmanRuntime\//],
           },
         ],
@@ -91,8 +89,6 @@ import { createKeyv,Keyv } from '@keyv/redis';
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(LoggerMiddleware)
-      .forRoutes('*');
+    consumer.apply(LoggerMiddleware).forRoutes('*');
   }
 }
