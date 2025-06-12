@@ -10,7 +10,7 @@ import {
 import { ComplainsService } from './complains.service';
 import { CreateComplainDto } from './dto/create-complain.dto';
 import { UpdateComplainDto } from './dto/update-complain.dto';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/auth/decorators';
 import { Roles } from 'src/auth/decorators/roles.decoretor';
 import { Role } from 'src/profile/entities/profile.entity';
@@ -32,6 +32,7 @@ export class ComplainsController {
   findAll() {
     return this.complainsService.findAll();
   }
+
 
   @Roles(Role.ADMIN, Role.STUDENT)
   @Get(':complainid')

@@ -1,9 +1,9 @@
 import { Module, MiddlewareConsumer } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
-import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
-
+import { CacheModule, CacheInterceptor } from '@nestjs/cache-manager';
+import type { CacheModuleOptions } from '@nestjs/cache-manager';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { LoggerMiddleware } from './logger.middleware';
@@ -16,6 +16,8 @@ import { StudentModule } from './student/student.module';
 import { SeedModule } from './seed/seed.module';
 import { AuthModule } from './auth/auth.module';
 import { AtGuard } from './auth/guards';
+import { CacheableMemory } from 'cacheable';
+import { createKeyv,Keyv } from '@keyv/redis';
 
 @Module({
   imports: [
@@ -23,21 +25,39 @@ import { AtGuard } from './auth/guards';
       isGlobal: true,
       envFilePath: '.env',
     }),
-    CacheModule.register({ //  Register the cache module
+
+    CacheModule.registerAsync({
       isGlobal: true,
-      ttl: 60,
-      max: 100,
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => {
+        return {
+          ttl: 60000,
+          stores:[
+            new Keyv({
+              store:new CacheableMemory({ttl:60000,lruSize:5000}),
+            }),
+             createKeyv(
+            config.getOrThrow('REDIS_URL'),
+             )
+          ],
+                }
+      }
     }),
     ThrottlerModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
-        ttl: Number(config.getOrThrow('THROTTLE_TTL')),    // in seconds
-        limit: Number(config.getOrThrow('THROTTLE_LIMIT')), // number of requests
-        ignoreUserAgents: [/^curl\//, /^PostmanRuntime\//],
-        throttlers: [],
+        throttlers: [
+          {
+            ttl: Number(config.getOrThrow('THROTTLE_TTL')),
+            limit: Number(config.getOrThrow('THROTTLE_LIMIT')),
+            ignoreUserAgents: [/^curl\//, /^PostmanRuntime\//],
+          },
+        ],
       }),
     }),
+
     AdminModule,
     ProfileModule,
     ComplainsModule,
@@ -49,14 +69,20 @@ import { AtGuard } from './auth/guards';
   controllers: [AppController],
   providers: [
     AppService,
+
+    // Enable caching globally
     {
-      provide: 'APP_INTERCEPTOR',
+      provide: APP_INTERCEPTOR,
       useClass: CacheInterceptor,
     },
+
+    // JWT Guard
     {
       provide: APP_GUARD,
       useClass: AtGuard,
     },
+
+    // Throttle Guard
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
@@ -67,13 +93,6 @@ export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(LoggerMiddleware)
-      .forRoutes(
-        'admin',
-        'profile',
-        'complains',
-        'student',
-        'user',
-        'feedback',
-      );
+      .forRoutes('*');
   }
 }

@@ -18,7 +18,7 @@ import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decoretor';
 import { Public } from 'src/auth/decorators';
 import { AtGuard } from 'src/auth/guards';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Admin')
 @ApiBearerAuth()
@@ -36,6 +36,7 @@ export class AdminController {
   findAll() {
     return this.adminService.findAll();
   }
+
 
   @Roles(Role.ADMIN)
   @Get(':id')

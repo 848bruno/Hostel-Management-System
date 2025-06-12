@@ -20,6 +20,6 @@ export class AtStrategy extends PassportStrategy(Strategy, 'jwt-at') {
   }
 
   validate(payload: JWTPayload) {
-    return payload; // Payload includes role, accessible in request.user
+    return payload; // Payload includes role, accessible in request
   }
 }
