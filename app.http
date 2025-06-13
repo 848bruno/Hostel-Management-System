@@ -7,21 +7,22 @@
 ### Get all admins
 GET {{url}}/admin
 
-### Get all adminss with search
-GET {{url}}/admin?Admin_id=5
 
 ### Get admin by ID
-GET {{url}}/admin/4
+GET {{url}}/admin/9
 
 ### Create new admin
 POST {{url}}/admin
 Content-Type: application/json
 
 {
-  "Admin_id": 6,
-  "username": "eano",
-  "last_login": "2025-05-27T10:00:00Z"
-  
+    "id": 13,
+   "username": "Abigayle.Schaefer",
+    "last_login": "2025-06-10",
+    "createdAt": "2025-06-10T11:12:29.040Z",
+    "updatedAt": "2025-06-10T11:12:29.040Z",
+    "password": "Password123",
+    "email": "ambale@gmail.com"
 }
 
 ### Update admin
@@ -29,35 +30,77 @@ PATCH {{url}}/admin/3
 Content-Type: application/json
 
 {
- "Admin_id":4,
-  "username":"Ambale"
+"id": 9,
+  "username": "Garret_Davis",
+  "last_login": "2025-06-10",
+  "createdAt": "2025-06-10T11:12:30.676Z",
+  "updatedAt": "2025-06-10T11:12:30.676Z"
 }
 
 ### Delete admin
 DELETE {{url}}/admin/1
 
 ###############################################
-# Students Controller
+# users Controller
+###############################################
+
+### Get all users
+GET {{url}}/user
+
+### Get all students with search
+GET {{url}}/user?search=Carrie.Kiehn12
+
+### Get users by ID
+GET {{url}}/user/65
+
+### Create new user
+POST {{url}}/user
+Content-Type: application/json
+
+{
+  "userid": 65,
+    "username": "Eliza_Johnson",
+    "password": "AA5x6AhVzVtcxx1",
+    "email": "Felicita_Hoeger@yahoo.com",
+    "refreshToken": null,
+    "last_login": "2025-06-09T17:03:31.984Z",
+}
+
+### Update user
+PATCH {{url}}/user/65
+Content-Type: application/json
+
+{
+   "userid": 65,
+    "username": "Eliza_Johnson",
+    "password": "AA5x6AhVzVtcxx1",
+    "email": "Felicita_Hoeger@yahoo.com",
+    "refreshToken": null,
+    "last_login": "2025-06-09T17:03:31.984Z"
+}
+
+### Delete user
+DELETE {{url}}/user/65
+
+###############################################
+# Student Controller
 ###############################################
 
 ### Get all students
 GET {{url}}/students
 
-### Get all students with search
-GET {{url}}/students?search=John
-
 ### Get student by ID
-GET {{url}}/students/10
+GET {{url}}/students/4
 
 ### Create new student
-POST {{url}}/students
+POST {{url}}/students/
 Content-Type: application/json
 
 {
-  "enrollmentDate": "2025-05-27",
-  "role": "student",
-  "degreeProgram": "BSc Computer Science",
-  "gpa": 3.5,
+  "id": 5,
+  "room_id": 3,
+  "course_id": 2,
+  "registration_date": 2024
 }
 
 ### Update student
@@ -65,294 +108,148 @@ PATCH {{url}}/students/1
 Content-Type: application/json
 
 {
-  "degreeProgram": "MSc Computer Science",
-  "profile": 1
+  "id": 4,
+  "room_id": 3,
+  "course_id": 2,
+  "registration_date": "2024-09-25T02:11:25.054Z"
 }
 
 ### Delete student
-DELETE {{url}}/students/1
+DELETE {{url}}/students/4
 
 ###############################################
-# Courses Controller
+# Complain Controller
 ###############################################
 
-### Get all courses
-GET {{url}}/courses
+### Get all complains
+GET {{url}}/complains
 
-### Get all courses with search
-GET {{url}}/courses?search=Programming
+### Get complain by ID
+GET {{url}}/complains/1
 
-### Get course by ID
-GET {{url}}/courses/1
-
-### Create new course
-POST {{url}}/courses
+### Create new complain
+POST {{url}}/complains
 Content-Type: application/json
 
 {
-  "title": "MS Software Engineering",
-  "description": "Advanced software engineering principles",
-  "departmentId": 1,
-  "credits": 3,
-  "duration": "16 weeks",
-  "startDate": "2025-05-28",
-  "endDate": "2025-09-15"
+  "title": "Leaky Faucet",
+  "description": "The faucet in room 102 is leaking constantly.",
+  "studentId": 2
 }
 
-### Update course
-PATCH {{url}}/courses/1
+### Update complain
+PATCH {{url}}/complains/1
 Content-Type: application/json
 
 {
-  "title": "Advanced Web Programming",
-  "credits": 4,
-  "description": "Advanced topics in web development",
-  "duration": "14 weeks",
-  "departmentId": 1,
+  "title": "Broken Faucet",
+  "description": "The faucet has now broken completely."
 }
 
-### Delete course
-DELETE {{url}}/courses/1
+### Delete complaint
+DELETE {{url}}/complaints/1
 
 ###############################################
-# Departments Controller
+# Feedback Controller
 ###############################################
 
-### Get all departments
-GET {{url}}/departments
+### Get all feedback
+GET {{url}}/feedback
 
-### Get all departments with search
-GET {{url}}/departments?search=Science
+### Get feedback by ID
+GET {{url}}/feedback/1
 
-### Get department by ID
-GET {{url}}/departments/1
-
-### Create new department
-POST {{url}}/departments
+### Create feedback with complaint associations
+POST {{url}}/feedback
 Content-Type: application/json
 
 {
-  "name": "Maths and Computer Science",
-  "description": "Department of Maths and Computer Science and Engineering"
+  "message": "Issue was resolved quickly.",
+  "studentId": 2,
+  "complaintIds": [1, 2]
 }
 
-### Update department
-PATCH {{url}}/departments/1
+### Update feedback
+PATCH {{url}}/feedback/1
 Content-Type: application/json
 
 {
-  "name": "Computer Science & Engineering",
-  "description": "Updated department description",
-  "headOfDepartment": "Dr. Robert Johnson"
+  "message": "Thank you for the quick fix!",
+  "complaintIds": [1]
 }
 
-### Delete department
-DELETE {{url}}/departments/1
+### Delete feedback
+DELETE {{url}}/feedback/1
+
+### Get all feedback for a student
+GET {{url}}/student/2/feedback
+
+### Get all feedback associated with a complaint
+GET {{url}}/complain/1/feedback
+
+
+
 
 ###############################################
-# Lectures Controller
+# AUTHENTICATION
 ###############################################
+### SIGNUP a new user
+POST {{url}}/auth/signup
 
-### Get all lectures
-GET {{url}}/lectures
-
-### Get all lectures with search
-GET {{url}}/lectures?search=Math
-
-### Get lecture by ID
-GET {{url}}/lectures/1
-
-### Create new lecture
-POST {{url}}/lectures
+{
+ "password": "ambale",
+  "email":"ambale@gmail.com"
+}
+### LOGIN a new user
+POST {{url}}/auth/signin
 Content-Type: application/json
 
 {
-  "title": "Introduction to Math",
-  "description": "Basic mathematical concepts",
-  "courseId": 1,
-  "duration": 90,
-  "lectureDate": "2025-05-28",
-  "materials": "https://example.com/lecture-slides"
+ "password":"admin123",
+  "email":"stuart14@hotmail.com"
 }
-
-### Update lecture
-PATCH {{url}}/lectures/1
+### REGISTER a new user
+### Create new a new student profile
+POST {{url}}/users
 Content-Type: application/json
 
 {
-  "title": "Advanced Mathematics",
-  "duration": 120,
-  "description": "Advanced topics in calculus and linear algebra",
-  "materials": "https://example.com/advanced-math-slides"
+  "room_id": 10,
+  "first_name": "John",
+  "last_name": "Doe",
+  "phone_number": "1234567890",
+  "address": "not-an-email",
+  "course_id": 1,
+  "registration_date": 2025-05-25
+
 }
 
-### Delete lecture
-DELETE {{url}}/lectures/1
+
+### Create new a new admin profile
+POST {{url}}/users
+Content-Type: application/json
+
+{
+
+}
+
+### signout
+GET {{url}}/auth/signout/1
 
 ###############################################
-# Course Enrollment - Many-to-Many Relationship Tests
+# Authorized requests
 ###############################################
+@AccessToken =place your access token here
+@RefreshToken = place your refresh token here
+GET {{url}}/profile
+Authorization: Bearer {{AccessToken}}
 
-### Create a profile for testing
-POST {{url}}/profiles
-Content-Type: application/json
-
-{
-  "firstName": "Jane",
-  "lastName": "Smith",
-  "email": "jane.smith@example.com",
-  "role": "student"
-}
-
-### Create a student linked to the profile
-POST {{url}}/students
-Content-Type: application/json
-
-{
-  "enrollmentDate": "2025-01-15",
-  "degreeProgram": "MSc Computer Science",
-  "gpa": 3.8,
-  "profileId": 4
-}
-
-### Create a department for testing
-POST {{url}}/departments
-Content-Type: application/json
-
-{
-  "name": "Computer Science",
-  "description": "Department of Computer Science and Engineering"
-}
-
-### Create courses for testing
-POST {{url}}/courses
-Content-Type: application/json
-
-{
-  "title": "Introduction to Programming",
-  "description": "Fundamentals of programming concepts",
-  "departmentId": 3,
-  "credits": 3,
-  "duration": "16 weeks",
-  "startDate": "2025-06-01",
-  "endDate": "2025-09-30"
-}
-
-### Create another course
-POST {{url}}/courses
-Content-Type: application/json
-
-{
-  "title": "Advanced Algorithms",
-  "description": "Study of complex algorithms and data structures",
-  "departmentId": 3,
-  "credits": 4,
-  "duration": "16 weeks",
-  "startDate": "2025-06-01", 
-  "endDate": "2025-09-30"
-}
-
+###
 ### Get all students
 GET {{url}}/students
+Authorization: Bearer {{AccessToken}}
 
-### Get all courses
-GET {{url}}/courses
+### refresh token
+GET {{url}}/auth/refresh?id=9
+Authorization: Bearer {{RefreshToken}}
 
-### Enroll a student in a course (student id = 1, course id = 1)
-POST {{url}}/students/1/courses/1
-
-### Enroll a student in another course (student id = 1, course id = 2)
-POST {{url}}/students/1/courses/2
-
-### Get all courses for a student
-GET {{url}}/students/1/courses
-
-### Get all students enrolled in a course
-GET {{url}}/courses/1/students
-
-### Unenroll a student from a course
-DELETE {{url}}/students/1/courses/2
-
-### Alternative: Add a student to a course from the course endpoint
-POST {{url}}/courses/2/students/1
-
-### Alternative: Remove a student from a course from the course endpoint
-DELETE {{url}}/courses/2/students/1
-
-###############################################
-# Additional Many-to-Many Test Cases
-###############################################
-
-### Create multiple students for batch testing
-POST {{url}}/profiles
-Content-Type: application/json
-
-{
-  "firstName": "Alex",
-  "lastName": "Johnson",
-  "email": "alex.johnson@example.com",
-  "role": "student"
-}
-
-### Create student linked to profile
-POST {{url}}/students
-Content-Type: application/json
-
-{
-  "enrollmentDate": "2025-02-10",
-  "degreeProgram": "BSc Computer Science",
-  "gpa": 3.6,
-  "profileId": 2
-}
-
-### Create another profile
-POST {{url}}/profiles
-Content-Type: application/json
-
-{
-  "firstName": "Maria",
-  "lastName": "Rodriguez",
-  "email": "maria.rodriguez@example.com",
-  "role": "student"
-}
-
-### Create student linked to profile
-POST {{url}}/students
-Content-Type: application/json
-
-{
-  "enrollmentDate": "2025-01-20",
-  "degreeProgram": "MSc Data Science",
-  "gpa": 3.9,
-  "profileId": 3
-}
-
-### Create another course for testing multiple enrollments
-POST {{url}}/courses
-Content-Type: application/json
-
-{
-  "title": "Database Systems",
-  "description": "Principles of database design and implementation",
-  "departmentId": 1,
-  "credits": 4,
-  "duration": "16 weeks",
-  "startDate": "2025-06-01", 
-  "endDate": "2025-09-30"
-}
-
-### Batch enroll multiple students in the same course
-POST {{url}}/students/2/courses/3
-###
-POST {{url}}/students/3/courses/3
-
-### Batch enroll one student in multiple courses
-POST {{url}}/students/3/courses/1
-###
-POST {{url}}/students/3/courses/2
-
-### Get all students enrolled in a specific course
-GET {{url}}/courses/3/students
-
-### Get all courses for a specific student
-GET {{url}}/students/3/courses
