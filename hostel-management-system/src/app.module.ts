@@ -48,8 +48,8 @@ import { createKeyv, Keyv } from '@keyv/redis';
       useFactory: (config: ConfigService) => ({
         throttlers: [
           {
-            ttl: Number(config.getOrThrow('THROTTLE_TTL', 60)),
-            limit: Number(config.getOrThrow('THROTTLE_LIMIT', 10)),
+            ttl: Number(config.getOrThrow('THROTTLE_TTL',60)),
+            limit: Number(config.getOrThrow('THROTTLE_LIMIT',10)),
             ignoreUserAgents: [/^curl\//, /^PostmanRuntime\//],
           },
         ],
